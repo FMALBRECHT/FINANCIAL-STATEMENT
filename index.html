@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cashflow Life</title>
+  <meta name="theme-color" content="#0b0b0f" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Personal Financial Operating System</p>
+        <h1>Cashflow Life</h1>
+      </div>
+      <button id="resetDataBtn" class="ghost danger">Reset</button>
+    </header>
+
+    <section class="hero card">
+      <div>
+        <p class="eyebrow">Freedom rule</p>
+        <h2>Passive Income ≥ Total Expenses</h2>
+        <p class="muted">Track your real life like the Cashflow game, but with your actual numbers.</p>
+      </div>
+      <div class="status-block">
+        <span id="freedomBadge" class="badge locked">In Rat Race</span>
+        <p id="gapText" class="metric-caption">Freedom gap: $0</p>
+      </div>
+    </section>
+
+    <section class="grid summary-grid">
+      <article class="card metric-card"><p class="eyebrow">Active Income</p><h3 id="activeIncomeTotal">$0</h3></article>
+      <article class="card metric-card"><p class="eyebrow">Passive Income</p><h3 id="passiveIncomeTotal">$0</h3></article>
+      <article class="card metric-card"><p class="eyebrow">Expenses</p><h3 id="expensesTotal">$0</h3></article>
+      <article class="card metric-card"><p class="eyebrow">Monthly Cash Flow</p><h3 id="cashflowTotal">$0</h3></article>
+      <article class="card metric-card"><p class="eyebrow">Assets</p><h3 id="assetsTotal">$0</h3></article>
+      <article class="card metric-card"><p class="eyebrow">Liabilities</p><h3 id="liabilitiesTotal">$0</h3></article>
+      <article class="card metric-card"><p class="eyebrow">Net Worth</p><h3 id="netWorthTotal">$0</h3></article>
+      <article class="card metric-card"><p class="eyebrow">Freedom %</p><h3 id="freedomPercent">0%</h3></article>
+    </section>
+
+    <section class="grid chart-grid">
+      <article class="card">
+        <div class="section-head"><h2>Cashflow Gauge</h2></div>
+        <div id="gaugeChart" class="chart"></div>
+      </article>
+      <article class="card">
+        <div class="section-head"><h2>Income vs Expenses</h2></div>
+        <div id="barChart" class="chart"></div>
+      </article>
+      <article class="card full-span">
+        <div class="section-head"><h2>Asset Mix</h2></div>
+        <div id="assetChart" class="chart"></div>
+      </article>
+    </section>
+
+    <section class="grid input-grid">
+      <article class="card">
+        <div class="section-head">
+          <h2>Profile</h2>
+        </div>
+        <div class="form-grid">
+          <label>Name<input id="profileName" type="text" placeholder="Your name"></label>
+          <label>Profession<input id="profileProfession" type="text" placeholder="Profession"></label>
+          <label>Dream Goal<input id="profileDream" type="text" placeholder="Your dream"></label>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="section-head">
+          <h2>Add Income</h2>
+        </div>
+        <div class="form-grid">
+          <label>Description<input id="incomeName" type="text" placeholder="Branding client / dividend / rental"></label>
+          <label>Amount<input id="incomeAmount" type="number" min="0" step="0.01" placeholder="0"></label>
+          <label>Type
+            <select id="incomeType">
+              <option value="active">Active</option>
+              <option value="passive">Passive</option>
+            </select>
+          </label>
+        </div>
+        <button id="addIncomeBtn">Add Income</button>
+        <div id="incomeList" class="list"></div>
+      </article>
+
+      <article class="card">
+        <div class="section-head">
+          <h2>Add Expense</h2>
+        </div>
+        <div class="form-grid">
+          <label>Description<input id="expenseName" type="text" placeholder="Rent / food / insurance"></label>
+          <label>Amount<input id="expenseAmount" type="number" min="0" step="0.01" placeholder="0"></label>
+        </div>
+        <button id="addExpenseBtn">Add Expense</button>
+        <div id="expenseList" class="list"></div>
+      </article>
+
+      <article class="card">
+        <div class="section-head">
+          <h2>Add Asset</h2>
+        </div>
+        <div class="form-grid">
+          <label>Description<input id="assetName" type="text" placeholder="Cash / stocks / real estate"></label>
+          <label>Value<input id="assetAmount" type="number" min="0" step="0.01" placeholder="0"></label>
+          <label>Category
+            <select id="assetCategory">
+              <option value="cash">Cash</option>
+              <option value="stocks">Stocks</option>
+              <option value="real_estate">Real Estate</option>
+              <option value="business">Business</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+        </div>
+        <button id="addAssetBtn">Add Asset</button>
+        <div id="assetList" class="list"></div>
+      </article>
+
+      <article class="card">
+        <div class="section-head">
+          <h2>Add Liability</h2>
+        </div>
+        <div class="form-grid">
+          <label>Description<input id="liabilityName" type="text" placeholder="Credit card / loan / mortgage"></label>
+          <label>Amount<input id="liabilityAmount" type="number" min="0" step="0.01" placeholder="0"></label>
+        </div>
+        <button id="addLiabilityBtn">Add Liability</button>
+        <div id="liabilityList" class="list"></div>
+      </article>
+
+      <article class="card full-span">
+        <div class="section-head">
+          <h2>Deal Opportunities</h2>
+          <p class="muted">Use this like your real-life deal cards.</p>
+        </div>
+        <div class="form-grid deal-grid">
+          <label>Deal Name<input id="dealName" type="text" placeholder="Rental unit / product launch"></label>
+          <label>Upfront Cost<input id="dealCost" type="number" min="0" step="0.01" placeholder="0"></label>
+          <label>Monthly Cash Flow<input id="dealCashflow" type="number" step="0.01" placeholder="0"></label>
+          <label>Type
+            <select id="dealType">
+              <option value="business">Business</option>
+              <option value="real_estate">Real Estate</option>
+              <option value="investment">Investment</option>
+              <option value="skill">Skill / Project</option>
+            </select>
+          </label>
+        </div>
+        <div class="button-row">
+          <button id="addDealBtn">Add Deal</button>
+          <button id="convertDealBtn" class="ghost">Convert Selected Deal to Asset + Passive Income</button>
+        </div>
+        <div id="dealList" class="list"></div>
+      </article>
+
+      <article class="card full-span">
+        <div class="section-head">
+          <h2>Export / Import</h2>
+        </div>
+        <div class="button-row">
+          <button id="exportBtn" class="ghost">Export JSON</button>
+          <label class="file-upload ghost">
+            Import JSON
+            <input id="importFile" type="file" accept="application/json" hidden>
+          </label>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <template id="itemTemplate">
+    <div class="list-item">
+      <div>
+        <strong class="item-title"></strong>
+        <p class="item-meta"></p>
+      </div>
+      <div class="item-actions">
+        <span class="item-amount"></span>
+        <button class="ghost small remove-btn">Remove</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
